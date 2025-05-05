@@ -1,0 +1,55 @@
+import java.util.*;
+
+public class BerkeleyAlgorithm {
+
+    public static String formatTime(int totalSeconds) {
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int seconds = totalSeconds % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of slave clocks: ");
+        int n = sc.nextInt();
+
+        int[] slaveClocks = new int[n];
+        int masterClock;
+
+        System.out.print("Enter master clock time (in seconds): ");
+        masterClock = sc.nextInt();
+
+        System.out.println("Enter time for each slave clock (in seconds):");
+        for (int i = 0; i < n; i++) {
+            System.out.print("Slave " + (i + 1) + ": ");
+            slaveClocks[i] = sc.nextInt();
+        }
+
+        int[] delay = new int[n];
+        Random rand = new Random();
+        for (int i = 0; i < n; i++) {
+            delay[i] = rand.nextInt(5);
+        }
+
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            slaveClocks[i] += delay[i] / 2;
+            sum += slaveClocks[i];
+        }
+
+        int avg = sum / n;
+
+        System.out.println("\n--- Clock Adjustment Summary ---");
+        System.out.println("Master clock time: " + formatTime(masterClock));
+        System.out.println("Average of slave clocks (adjusted): " + formatTime(avg) + "\n");
+
+        System.out.println("Adjustments required:");
+        System.out.println("Master: " + (avg - masterClock) + " sec (" + formatTime(Math.abs(avg - masterClock)) + ")");
+        for (int i = 0; i < n; i++) {
+            int diff = avg - slaveClocks[i];
+            System.out.println("Slave " + (i + 1) + ": " + diff + " sec (" + formatTime(Math.abs(diff)) + ")");
+        }
+    }
+}
