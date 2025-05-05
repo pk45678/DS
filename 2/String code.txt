@@ -1,0 +1,179 @@
+Server Implementation java code 
+import java.rmi.*; 
+import java.util.Scanner; 
+ 
+ 
+ 
+public class Client{ 
+ public static void main(String[] args){ 
+  Scanner sc = new Scanner(System.in); 
+   
+  try{ 
+   String serverURL = "rmi://localhost/Server"; 
+   ServerIntf serverIntf = (ServerIntf) Naming.lookup(serverURL); 
+    
+   System.out.print("Enter First word: "); 
+   String sen1 = sc.next(); 
+    
+   System.out.print("Enter Second word: "); 
+   String sen2 = sc.next(); 
+    
+    
+   System.out.println("First word Is: " + sen1); 
+   System.out.println("Second word Is: " + sen2); 
+ 
+   serverIntf.sendsent(sen1,sen2);  
+    
+    
+   System.out.println("--------------- Results ---------------"); 
+ 
+    
+   System.out.println("Length of First word Is: " 
++serverIntf.lengthsen(sen1)); 
+    
+ 
+   System.out.println("Word is palindrome or not ("+sen1+"): " 
++serverIntf.palindrome(sen1)); 
+    
+   System.out.println("Reverse of First word Is: ("+sen1+"): " 
++serverIntf.Reversestr(sen1)); 
+    
+   System.out.println("Word is Equal/same or not: ("+sen1+"): " 
++serverIntf.isequalstring(sen1,sen2)); 
+ 
+    
+   System.out.println("concatenation of word Is: " 
++serverIntf.constring(sen1,sen2)); 
+  }catch(Exception e){ 
+   System.out.println("Exception Occurred At Client!" + e.getMessage()); 
+  } 
+   
+ } 
+ 
+} 
+ 
+ 
+2) Server Java Code: 
+import java.rmi.*; 
+import java.rmi.registry.LocateRegistry; 
+ 
+public class Server{ 
+  
+ public static void main(String[] args){ 
+  
+  try{ 
+   ServerImpl serverImpl = new ServerImpl(); 
+   Naming.rebind("Server", serverImpl); 
+    
+   System.out.println("Server Started...."); 
+   
+  }catch(Exception e){ 
+   System.out.println("Exception Occurred At Server!" + e.getMessage()); 
+  } 
+ } 
+} 
+3) Server Interface Code 
+import java.rmi.*; 
+ 
+ 
+interface ServerIntf extends Remote{ 
+ // Syntax for method declaration: access_specifier return_type 
+method_name(arguments...){ return value} 
+  
+ public void sendsent(String sen1,String sen2) throws RemoteException; 
+ public int lengthsen(String sen) throws RemoteException; 
+ public String constring(String sen1,String sen2) throws RemoteException; 
+ public boolean palindrome(String a) throws RemoteException; 
+ public String Reversestr(String a) throws RemoteException; 
+ public boolean isequalstring(String str1, String str2) throws RemoteException; 
+} 
+ 
+4) Client Java Code 
+import java.rmi.*; 
+import java.util.Scanner; 
+ 
+ 
+ 
+public class Client{ 
+ public static void main(String[] args){ 
+  Scanner sc = new Scanner(System.in); 
+   
+  try{ 
+   String serverURL = "rmi://localhost/Server"; 
+   ServerIntf serverIntf = (ServerIntf) Naming.lookup(serverURL); 
+    
+   System.out.print("Enter First word: "); 
+   String sen1 = sc.next(); 
+    
+   System.out.print("Enter Second word: "); 
+   String sen2 = sc.next(); 
+    
+    
+   System.out.println("First word Is: " + sen1); 
+   System.out.println("Second word Is: " + sen2); 
+ 
+   serverIntf.sendsent(sen1,sen2);  
+    
+    
+   System.out.println("--------------- Results ---------------"); 
+ 
+    
+   System.out.println("Length of First word Is: " 
++serverIntf.lengthsen(sen1)); 
+    
+ 
+   System.out.println("Word is palindrome or not ("+sen1+"): " 
++serverIntf.palindrome(sen1)); 
+    
+System.out.println("Reverse of First word Is: ("+sen1+"): " 
++serverIntf.Reversestr(sen1)); 
+System.out.println("Word is Equal/same or not: ("+sen1+"): " 
++serverIntf.isequalstring(sen1,sen2)); 
+System.out.println("concatenation of word Is: " 
++serverIntf.constring(sen1,sen2)); 
+}catch(Exception e){ 
+System.out.println("Exception Occurred At Client!" + e.getMessage()); 
+} 
+} 
+} 
+import java.rmi.*;
+import java.rmi.server.*;
+
+public class ServerImpl extends UnicastRemoteObject implements ServerIntf {
+
+    public ServerImpl() throws RemoteException {
+        super();
+    }
+
+    @Override
+    public void sendsent(String sen1, String sen2) throws RemoteException {
+        System.out.println("Received First Word: " + sen1);
+        System.out.println("Received Second Word: " + sen2);
+    }
+
+    @Override
+    public int lengthsen(String sen) throws RemoteException {
+        return sen.length();
+    }
+
+    @Override
+    public String constring(String sen1, String sen2) throws RemoteException {
+        return sen1 + sen2;
+    }
+
+    @Override
+    public boolean palindrome(String a) throws RemoteException {
+        String reversed = new StringBuilder(a).reverse().toString();
+        return a.equals(reversed);
+    }
+
+    @Override
+    public String Reversestr(String a) throws RemoteException {
+        return new StringBuilder(a).reverse().toString();
+    }
+
+    @Override
+    public boolean isequalstring(String str1, String str2) throws RemoteException {
+        return str1.equals(str2);
+    }
+}
